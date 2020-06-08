@@ -1,4 +1,4 @@
-package main_test
+package thin_test
 
 import (
 	"testing"

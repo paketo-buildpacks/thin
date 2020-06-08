@@ -1,13 +1,14 @@
-package main_test
+package thin_test
 
 import (
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/paketo-community/thin"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
-	main "github.com/paketo-community/thin"
 )
 
 func testGemfileParser(t *testing.T, context spec.G, it spec.S) {
@@ -15,7 +16,7 @@ func testGemfileParser(t *testing.T, context spec.G, it spec.S) {
 		Expect = NewWithT(t).Expect
 
 		path   string
-		parser main.GemfileParser
+		parser thin.GemfileParser
 	)
 
 	it.Before(func() {
@@ -24,7 +25,7 @@ func testGemfileParser(t *testing.T, context spec.G, it spec.S) {
 		defer file.Close()
 
 		path = file.Name()
-		parser = main.NewGemfileParser()
+		parser = thin.NewGemfileParser()
 	})
 
 	it.After(func() {
