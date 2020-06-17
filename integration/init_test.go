@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	thinBuildpack       string
+	thinBuildpack          string
 	mriBuildpack           string
 	bundlerBuildpack       string
 	bundleInstallBuildpack string
@@ -56,6 +56,7 @@ func TestIntegration(t *testing.T) {
 
 	suite := spec.New("Integration", spec.Parallel(), spec.Report(report.Terminal{}))
 	suite("SimpleApp", testSimpleApp)
+	suite("RackApp", testRackApp)
 	suite.Run(t)
 }
 
