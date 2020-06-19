@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -33,7 +34,8 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 			image     occam.Image
 			container occam.Container
 
-			name string
+			name   string
+			source string
 		)
 
 		it.Before(func() {
@@ -46,16 +48,20 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 			Expect(docker.Container.Remove.Execute(container.ID)).To(Succeed())
 			Expect(docker.Image.Remove.Execute(image.ID)).To(Succeed())
 			Expect(docker.Volume.Remove.Execute(occam.CacheVolumeNames(name))).To(Succeed())
+			Expect(os.RemoveAll(source)).To(Succeed())
 		})
 
 		context("a container port is specified", func() {
 			it("creates a working OCI image with a thin start command", func() {
 				var err error
+				source, err = occam.Source(filepath.Join("testdata", "simple_app"))
+				Expect(err).NotTo(HaveOccurred())
+
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
 					WithBuildpacks(mriBuildpack, bundlerBuildpack, bundleInstallBuildpack, thinBuildpack).
 					WithNoPull().
-					Execute(name, filepath.Join("testdata", "simple_app"))
+					Execute(name, source)
 				Expect(err).NotTo(HaveOccurred(), logs.String())
 
 				container, err = docker.Container.Run.WithEnv(map[string]string{"PORT": "8080"}).Execute(image.ID)
@@ -77,7 +83,7 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 				Expect(string(content)).To(ContainSubstring("Hello world!"))
 
 				buildpackVersion, err := GetGitVersion()
-				Expect(err).ToNot(HaveOccurred())
+				Expect(err).NotTo(HaveOccurred())
 
 				Expect(logs).To(ContainLines(
 					fmt.Sprintf("Thin Buildpack %s", buildpackVersion),
@@ -90,11 +96,14 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 		context("no container port is specified", func() {
 			it("creates a working OCI image with a thin start command", func() {
 				var err error
+				source, err = occam.Source(filepath.Join("testdata", "simple_app"))
+				Expect(err).NotTo(HaveOccurred())
+
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
 					WithBuildpacks(mriBuildpack, bundlerBuildpack, bundleInstallBuildpack, thinBuildpack).
 					WithNoPull().
-					Execute(name, filepath.Join("testdata", "simple_app"))
+					Execute(name, source)
 				Expect(err).NotTo(HaveOccurred(), logs.String())
 
 				container, err = docker.Container.Run.Execute(image.ID)
@@ -113,7 +122,7 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 				Expect(string(content)).To(ContainSubstring("Hello world!"))
 
 				buildpackVersion, err := GetGitVersion()
-				Expect(err).ToNot(HaveOccurred())
+				Expect(err).NotTo(HaveOccurred())
 
 				Expect(logs).To(ContainLines(
 					fmt.Sprintf("Thin Buildpack %s", buildpackVersion),
