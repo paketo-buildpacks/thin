@@ -28,22 +28,22 @@ func TestIntegration(t *testing.T) {
 	Expect := NewWithT(t).Expect
 
 	root, err := filepath.Abs("./..")
-	Expect(err).ToNot(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred())
 
 	thinBuildpack, err = dagger.PackageBuildpack(root)
-	Expect(err).ToNot(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred())
 
 	// HACK: we need to fix dagger and the package.sh scripts so that this isn't required
 	thinBuildpack = fmt.Sprintf("%s.tgz", thinBuildpack)
 
 	mriBuildpack, err = dagger.GetLatestCommunityBuildpack("paketo-community", "mri")
-	Expect(err).ToNot(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred())
 
 	bundlerBuildpack, err = dagger.GetLatestCommunityBuildpack("paketo-community", "bundler")
-	Expect(err).ToNot(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred())
 
 	bundleInstallBuildpack, err = dagger.GetLatestCommunityBuildpack("paketo-community", "bundle-install")
-	Expect(err).ToNot(HaveOccurred())
+	Expect(err).NotTo(HaveOccurred())
 
 	defer func() {
 		Expect(dagger.DeleteBuildpack(thinBuildpack)).To(Succeed())
@@ -54,7 +54,7 @@ func TestIntegration(t *testing.T) {
 
 	SetDefaultEventuallyTimeout(10 * time.Second)
 
-	suite := spec.New("Integration", spec.Parallel(), spec.Report(report.Terminal{}))
+	suite := spec.New("Integration", spec.Report(report.Terminal{}), spec.Parallel())
 	suite("SimpleApp", testSimpleApp)
 	suite("RackApp", testRackApp)
 	suite.Run(t)
