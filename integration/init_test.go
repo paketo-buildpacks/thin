@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/cloudfoundry/dagger"
-	"github.com/paketo-buildpacks/occam"
 	"github.com/paketo-buildpacks/packit/pexec"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -58,15 +57,6 @@ func TestIntegration(t *testing.T) {
 	suite("SimpleApp", testSimpleApp)
 	suite("RackApp", testRackApp)
 	suite.Run(t)
-}
-
-func ContainerLogs(id string) func() string {
-	docker := occam.NewDocker()
-
-	return func() string {
-		logs, _ := docker.Container.Logs.Execute(id)
-		return logs.String()
-	}
 }
 
 func GetGitVersion() (string, error) {
