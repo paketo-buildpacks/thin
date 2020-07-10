@@ -1,6 +1,4 @@
 .DS_Store
-*.tgz
 .idea
-.bin
-thin_*
-/bin
+/.bin
+/build

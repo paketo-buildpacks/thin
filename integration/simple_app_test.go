@@ -59,7 +59,12 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
-					WithBuildpacks(mriBuildpack, bundlerBuildpack, bundleInstallBuildpack, thinBuildpack).
+					WithBuildpacks(
+						settings.Buildpacks.MRI.Online,
+						settings.Buildpacks.Bundler.Online,
+						settings.Buildpacks.BundleInstall.Online,
+						settings.Buildpacks.Thin.Online,
+					).
 					WithNoPull().
 					Execute(name, source)
 				Expect(err).NotTo(HaveOccurred(), logs.String())
@@ -82,11 +87,8 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(string(content)).To(ContainSubstring("Hello world!"))
 
-				buildpackVersion, err := GetGitVersion()
-				Expect(err).NotTo(HaveOccurred())
-
 				Expect(logs).To(ContainLines(
-					fmt.Sprintf("Thin Buildpack %s", buildpackVersion),
+					"Thin Buildpack 1.2.3",
 					"  Writing start command",
 					`    bundle exec thin -p "${PORT:-3000}" start`,
 				))
@@ -101,7 +103,12 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
-					WithBuildpacks(mriBuildpack, bundlerBuildpack, bundleInstallBuildpack, thinBuildpack).
+					WithBuildpacks(
+						settings.Buildpacks.MRI.Online,
+						settings.Buildpacks.Bundler.Online,
+						settings.Buildpacks.BundleInstall.Online,
+						settings.Buildpacks.Thin.Online,
+					).
 					WithNoPull().
 					Execute(name, source)
 				Expect(err).NotTo(HaveOccurred(), logs.String())
@@ -121,11 +128,8 @@ func testSimpleApp(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(string(content)).To(ContainSubstring("Hello world!"))
 
-				buildpackVersion, err := GetGitVersion()
-				Expect(err).NotTo(HaveOccurred())
-
 				Expect(logs).To(ContainLines(
-					fmt.Sprintf("Thin Buildpack %s", buildpackVersion),
+					"Thin Buildpack 1.2.3",
 					"  Writing start command",
 					`    bundle exec thin -p "${PORT:-3000}" start`,
 				))
