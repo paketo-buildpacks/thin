@@ -1,4 +1,7 @@
 # Thin Paketo Cloud Native Buildpack
+
+## `gcr.io/paketo-community/thin`
+
 The Thin CNB sets the start command for a given ruby application that runs on a Thin server.
 
 ## Integration
