@@ -2,7 +2,7 @@ api = "0.2"
 
 [buildpack]
   id = "paketo-community/thin"
-  name = "Thin Buildpack"
+  name = "Paketo Thin Buildpack"
 
 [metadata]
   include_files = ["bin/run", "bin/build","bin/detect","buildpack.toml"]
