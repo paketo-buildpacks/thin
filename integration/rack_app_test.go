@@ -70,6 +70,7 @@ func testRackApp(t *testing.T, context spec.G, it spec.S) {
 
 			container, err = docker.Container.Run.
 				WithCommand("bundle exec ruby myapp.rb").
+				WithEntrypoint("launcher").
 				Execute(image.ID)
 			Expect(err).NotTo(HaveOccurred())
 
