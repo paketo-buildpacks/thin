@@ -1,4 +1,4 @@
-module github.com/paketo-community/thin
+module github.com/paketo-buildpacks/thin
 
 go 1.14
 

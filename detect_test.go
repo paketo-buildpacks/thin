@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 
 	"github.com/paketo-buildpacks/packit"
-	"github.com/paketo-community/thin"
-	"github.com/paketo-community/thin/fakes"
+	"github.com/paketo-buildpacks/thin"
+	"github.com/paketo-buildpacks/thin/fakes"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"
