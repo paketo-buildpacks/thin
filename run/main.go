@@ -5,7 +5,7 @@ import (
 
 	"github.com/paketo-buildpacks/packit"
 	"github.com/paketo-buildpacks/packit/scribe"
-	"github.com/paketo-community/thin"
+	"github.com/paketo-buildpacks/thin"
 )
 
 func main() {
