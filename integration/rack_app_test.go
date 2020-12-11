@@ -71,12 +71,14 @@ func testRackApp(t *testing.T, context spec.G, it spec.S) {
 			container, err = docker.Container.Run.
 				WithCommand("bundle exec ruby myapp.rb").
 				WithEntrypoint("launcher").
+				WithPublish("3000").
+				WithPublishAll().
 				Execute(image.ID)
 			Expect(err).NotTo(HaveOccurred())
 
 			Eventually(container).Should(BeAvailable())
 
-			response, err := http.Get(fmt.Sprintf("http://localhost:%s", container.HostPort()))
+			response, err := http.Get(fmt.Sprintf("http://localhost:%s", container.HostPort("3000")))
 			Expect(err).NotTo(HaveOccurred())
 			defer response.Body.Close()
 
