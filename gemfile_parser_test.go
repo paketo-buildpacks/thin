@@ -1,7 +1,6 @@
 package thin_test
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -20,7 +19,7 @@ func testGemfileParser(t *testing.T, context spec.G, it spec.S) {
 	)
 
 	it.Before(func() {
-		file, err := ioutil.TempFile("", "Gemfile")
+		file, err := os.CreateTemp("", "Gemfile")
 		Expect(err).NotTo(HaveOccurred())
 		defer file.Close()
 
@@ -35,28 +34,24 @@ func testGemfileParser(t *testing.T, context spec.G, it spec.S) {
 	context("Parse", func() {
 		context("when using thin", func() {
 			it("parses correctly", func() {
-				const GEMFILE_CONTENTS = `source 'https://rubygems.org'
+				Expect(os.WriteFile(path, []byte(`source 'https://rubygems.org'
 
-gem 'thin'`
-
-				Expect(ioutil.WriteFile(path, []byte(GEMFILE_CONTENTS), 0644)).To(Succeed())
+gem 'thin'`), 0600)).To(Succeed())
 
 				hasThin, err := parser.Parse(path)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(hasThin).To(Equal(true))
+				Expect(hasThin).To(BeTrue())
 			})
 		})
 
 		context("when not using thin", func() {
 			it("parses correctly", func() {
-				const GEMFILE_CONTENTS = `source 'https://rubygems.org'
-ruby '~> 2.0'`
-
-				Expect(ioutil.WriteFile(path, []byte(GEMFILE_CONTENTS), 0644)).To(Succeed())
+				Expect(os.WriteFile(path, []byte(`source 'https://rubygems.org'
+ruby '~> 2.0'`), 0600)).To(Succeed())
 
 				hasThin, err := parser.Parse(path)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(hasThin).To(Equal(false))
+				Expect(hasThin).To(BeFalse())
 			})
 		})
 
@@ -68,7 +63,7 @@ ruby '~> 2.0'`
 			it("returns all false", func() {
 				hasThin, err := parser.Parse(path)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(hasThin).To(Equal(false))
+				Expect(hasThin).To(BeFalse())
 			})
 		})
 
