@@ -79,8 +79,8 @@ func testRackApp(t *testing.T, context spec.G, it spec.S) {
 
 			Expect(logs).To(ContainLines(
 				MatchRegexp(fmt.Sprintf(`%s \d+\.\d+\.\d+`, settings.Buildpack.Name)),
-				"  Writing start command",
-				`    bundle exec thin -p "${PORT:-3000}" start`,
+				"  Assigning launch processes:",
+				`    web (default): bash -c bundle exec thin -p "${PORT:-3000}" start`,
 			))
 		})
 	})

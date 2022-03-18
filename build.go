@@ -1,28 +1,30 @@
 package thin
 
 import (
-	"github.com/paketo-buildpacks/packit"
-	"github.com/paketo-buildpacks/packit/scribe"
+	"github.com/paketo-buildpacks/packit/v2"
+	"github.com/paketo-buildpacks/packit/v2/scribe"
 )
 
-func Build(logger scribe.Logger) packit.BuildFunc {
+func Build(logger scribe.Emitter) packit.BuildFunc {
 	return func(context packit.BuildContext) (packit.BuildResult, error) {
 		logger.Title("%s %s", context.BuildpackInfo.Name, context.BuildpackInfo.Version)
 
-		logger.Process("Writing start command")
 		// 3000 is the default thin port
-		command := `bundle exec thin -p "${PORT:-3000}" start`
-		logger.Subprocess(command)
+		args := `bundle exec thin -p "${PORT:-3000}" start`
+		processes := []packit.Process{
+			{
+				Type:    "web",
+				Command: "bash",
+				Args:    []string{"-c", args},
+				Default: true,
+				Direct:  true,
+			},
+		}
+		logger.LaunchProcesses(processes)
 
 		return packit.BuildResult{
 			Launch: packit.LaunchMetadata{
-				Processes: []packit.Process{
-					{
-						Type:    "web",
-						Command: command,
-						Default: true,
-					},
-				},
+				Processes: processes,
 			},
 		}, nil
 	}

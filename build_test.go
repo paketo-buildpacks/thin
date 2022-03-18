@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/paketo-buildpacks/packit"
-	"github.com/paketo-buildpacks/packit/scribe"
+	"github.com/paketo-buildpacks/packit/v2"
+	"github.com/paketo-buildpacks/packit/v2/scribe"
 	"github.com/paketo-buildpacks/thin"
 	"github.com/sclevine/spec"
 
@@ -37,7 +37,7 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		Expect(err).NotTo(HaveOccurred())
 
 		buffer = bytes.NewBuffer(nil)
-		logger := scribe.NewLogger(buffer)
+		logger := scribe.NewEmitter(buffer)
 
 		build = thin.Build(logger)
 	})
@@ -73,14 +73,16 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 				Processes: []packit.Process{
 					{
 						Type:    "web",
-						Command: `bundle exec thin -p "${PORT:-3000}" start`,
+						Command: "bash",
+						Args:    []string{"-c", `bundle exec thin -p "${PORT:-3000}" start`},
 						Default: true,
+						Direct:  true,
 					},
 				},
 			},
 		}))
 
 		Expect(buffer.String()).To(ContainSubstring("Some Buildpack some-version"))
-		Expect(buffer.String()).To(ContainSubstring("Writing start command"))
+		Expect(buffer.String()).To(ContainSubstring("Assigning launch processes:"))
 	})
 }
