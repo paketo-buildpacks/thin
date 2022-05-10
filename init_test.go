@@ -8,7 +8,7 @@ import (
 )
 
 func TestUnitThin(t *testing.T) {
-	suite := spec.New("thin", spec.Report(report.Terminal{}), spec.Parallel())
+	suite := spec.New("thin", spec.Report(report.Terminal{}), spec.Sequential())
 	suite("Build", testBuild)
 	suite("Detect", testDetect)
 	suite("GemfileParser", testGemfileParser)
