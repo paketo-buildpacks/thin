@@ -14,25 +14,23 @@ func Build(logger scribe.Emitter) packit.BuildFunc {
 	return func(context packit.BuildContext) (packit.BuildResult, error) {
 		logger.Title("%s %s", context.BuildpackInfo.Name, context.BuildpackInfo.Version)
 
-		thinConfigFilepath := filepath.Join(context.WorkingDir, "thin.yml")
+               thinConfigFilepath := os.Getenv("BP_THIN_CONFIG_LOCATION")
+                if thinConfigFilepath != "" {
+                        if !filepath.IsAbs(thinConfigFilepath) {
+                                thinConfigFilepath = filepath.Join(context.WorkingDir, thinConfigFilepath)
+                        }
 
-		envVarThinConfigFilepath := os.Getenv("BP_THIN_CONFIG_LOCATION")
-		if envVarThinConfigFilepath != "" {
-			if !filepath.IsAbs(envVarThinConfigFilepath) {
-				envVarThinConfigFilepath = filepath.Join(context.WorkingDir, envVarThinConfigFilepath)
-			}
+                        thinConfigFilepathExists, err := fs.Exists(thinConfigFilepath)
+                        if err != nil {
+                                return packit.BuildResult{}, err
+                        }
 
-			envVarThinConfigFilepathExists, err := fs.Exists(envVarThinConfigFilepath)
-			if err != nil {
-				return packit.BuildResult{}, err
-			}
-
-			if !envVarThinConfigFilepathExists {
-				return packit.BuildResult{}, packit.Fail.WithMessage("thin config file does not exist at: %s", envVarThinConfigFilepath)
-			}
-
-			thinConfigFilepath = envVarThinConfigFilepath
-		}
+                        if !thinConfigFilepathExists {
+                                return packit.BuildResult{}, packit.Fail.WithMessage("thin config file does not exist at: %s", thinConfigFilepath)
+                        }
+                } else {
+                        thinConfigFilepath = filepath.Join(context.WorkingDir, "thin.yml")
+                }
 
 		exists, err := fs.Exists(thinConfigFilepath)
 		if err != nil {
