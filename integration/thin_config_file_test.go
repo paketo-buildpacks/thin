@@ -80,7 +80,7 @@ func testThinConfigFile(t *testing.T, context spec.G, it spec.S) {
 				Expect(logs).To(ContainLines(
 					MatchRegexp(fmt.Sprintf(`%s \d+\.\d+\.\d+`, settings.Buildpack.Name)),
 					"  Assigning launch processes:",
-					`    web (default): bash -c bundle exec thin -C /workspace/thin.yml -p "${PORT:-3000}" start`,
+					`    web (default): bash -c bundle exec thin -C /workspace/thin.yml -R /workspace/config.ru -p "${PORT:-3000}" start`,
 				))
 
 				Eventually(func() string {
