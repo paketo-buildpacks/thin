@@ -122,6 +122,42 @@ func testBuild(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
+	context("when both thin.yml and config.ru files exist in the working directory", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filepath.Join(workingDir, "thin.yml"), []byte{}, os.ModePerm)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "config.ru"), []byte{}, os.ModePerm)).To(Succeed())
+		})
+
+		it("returns a result with both files provided to the thin start command", func() {
+			result, err := build(buildContext)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(result).To(Equal(packit.BuildResult{
+				Plan: packit.BuildpackPlan{
+					Entries: nil,
+				},
+				Layers: nil,
+				Launch: packit.LaunchMetadata{
+					Processes: []packit.Process{
+						{
+							Type:    "web",
+							Command: "bash",
+							Args: []string{
+								"-c",
+								fmt.Sprintf(`bundle exec thin -C %s -R %s -p "${PORT:-3000}" start`,
+									filepath.Join(workingDir, "thin.yml"),
+									filepath.Join(workingDir, "config.ru"),
+								),
+							},
+							Default: true,
+							Direct:  true,
+						},
+					},
+				},
+			}))
+		})
+	})
+
 	context("when the BP_THIN_CONFIG_LOCATION environment variable points to a valid file", func() {
 		it.Before(func() {
 			thinConfigFilepath := filepath.Join(workingDir, "some-thin-config.yml")
