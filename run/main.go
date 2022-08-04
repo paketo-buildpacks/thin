@@ -10,7 +10,7 @@ import (
 
 func main() {
 	parser := thin.NewGemfileParser()
-	logger := scribe.NewEmitter(os.Stdout)
+	logger := scribe.NewEmitter(os.Stdout).WithLevel(os.Getenv("BP_LOG_LEVEL"))
 
 	packit.Run(
 		thin.Detect(parser),
