@@ -1,4 +1,4 @@
-# Thin Paketo Cloud Native Buildpack
+# Thin Paketo Buildpack for Cloud Native
 
 ## `gcr.io/paketo-buildpacks/thin`
 

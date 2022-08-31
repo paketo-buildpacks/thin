@@ -5,7 +5,7 @@ api = "0.7"
   homepage = "https://github.com/paketo-buildpacks/thin"
   id = "paketo-buildpacks/thin"
   keywords = ["ruby", "thin"]
-  name = "Paketo Thin Buildpack"
+  name = "Paketo Buildpack for Thin"
 
   [[buildpack.licenses]]
     type = "Apache-2.0"
