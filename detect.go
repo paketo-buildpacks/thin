@@ -24,7 +24,7 @@ func Detect(gemfileParser Parser) packit.DetectFunc {
 		}
 
 		if !hasThin {
-			return packit.DetectResult{}, packit.Fail
+			return packit.DetectResult{}, packit.Fail.WithMessage("thin was not found in the Gemfile")
 		}
 
 		return packit.DetectResult{
