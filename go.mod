@@ -11,4 +11,7 @@ require (
 	gotest.tools/v3 v3.5.1 // indirect
 )
 
-replace github.com/CycloneDX/cyclonedx-go => github.com/CycloneDX/cyclonedx-go v0.6.0
+replace (
+	github.com/CycloneDX/cyclonedx-go => github.com/CycloneDX/cyclonedx-go v0.6.0
+	github.com/CycloneDX/cyclonedx-go v0.8.0 => github.com/CycloneDX/cyclonedx-go v0.7.2
+)
