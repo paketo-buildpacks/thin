@@ -22,7 +22,11 @@ func (p GemfileParser) Parse(path string) (bool, error) {
 
 		return false, fmt.Errorf("failed to parse Gemfile: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			_ = err
+		}
+	}()
 
 	quotes := `["']`
 	thinRe := regexp.MustCompile(fmt.Sprintf(`^gem %sthin%s`, quotes, quotes))
